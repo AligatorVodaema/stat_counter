@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'statistic_counter'
+    'statistic_counter',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'statistic_counter.middleware.Process500'
 ]
 
 ROOT_URLCONF = 'statistic_project.urls'
@@ -128,7 +130,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# DATE_INPUT_FORMATS = ['%Y-%m-%d']
 DATE_INPUT_FORMATS = ['iso-8601']
 
 DATE_FORMAT = 'iso-8601'

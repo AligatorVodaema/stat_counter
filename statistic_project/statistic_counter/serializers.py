@@ -2,13 +2,11 @@ from rest_framework import serializers
 from .models import Statistic
 from statistic_project.settings import DATE_INPUT_FORMATS, DATE_FORMAT
 from loguru import logger
-from django.db.models import Q
-
-# logger.add('debug.log', level='DEBUG', format='{time} {level} {message}')
 
 
 class SingleStatisticSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
+        label='Дата',
         format=DATE_FORMAT,
         input_formats=DATE_INPUT_FORMATS
         )
@@ -46,59 +44,30 @@ class SingleStatisticSerializer(serializers.ModelSerializer):
         return single_statistic
 
 
-class StatisticListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Statistic
-        fields = '__all__'
-    
-
-class StatisticSerializer(serializers.Serializer):
+class StatisticSerializer(serializers.ModelSerializer):
     date_from = serializers.DateField(
+        required=True,
+        allow_null=False,
         format=DATE_FORMAT,
-        input_formats=DATE_INPUT_FORMATS
+        input_formats=DATE_INPUT_FORMATS,
+        write_only=True
     )
     date_to = serializers.DateField(
+        required=True,
+        allow_null=False,
         format=DATE_FORMAT,
-        input_formats=DATE_INPUT_FORMATS
+        input_formats=DATE_INPUT_FORMATS,
+        write_only=True
     )
-    
-    # sort_field = serializers.CharField()
     class Meta:
         model = Statistic
-        fields = '__all__'
-
-    # def to_internal_value(self, data):
-    #     # print('--------', data)
-    #     date_from = data.get('date_from')
-    #     date_to = data.get('date_to')
-    #     # print('------', date_from, date_to)
-    #     #Валидация
-    #     return {
-    #         'date_from': date_from,
-    #         'date_to': date_to
-    #     }
-
-    # def create(self, validated_data):
-    #     print('---val-data---', validated_data)
-    #     # return Statistic.objects.filter(
-    #     #     date__gte=validated_data['date_from'],
-    #     return None
-    #     #     )
+        extra_kwargs = {
+            'date': {'read_only': True},
+            'views': {'read_only': True},
+            'clicks': {'read_only': True},
+            'cost': {'read_only': True},
+            'cpc': {'read_only': True},
+            'cpm': {'read_only': True}
+        }
+        exclude = ('id',)
     
-    # def to_representation(self, values):
-    #     print('-----val--', values)
-    #     # date_from = values.get('date_from')
-    #     # date_to = values.get('date_to')
-    #     # queryset = Statistic.objects.filter(
-    #     #     Q(date__gte=date_from) & Q(date__lte=date_to)
-    #     # )
-    #     # print('----Qs-----', queryset)
-    #     serializer = StatisticListSerializer(values)
-    #     return serializer.data
-    #     # return {'success': True}
-
-    # def to_representation(self, instance):
-    #     print('---ins---', instance)
-    #     serializer = StatisticListSerializer(instance, many=True)
-    #     print('----res---', serializer.data)
-    #     return serializer.data
