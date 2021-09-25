@@ -8,10 +8,18 @@ from django.db.models import Q
 
 
 class StatisticCreateView(generics.CreateAPIView):
+    """
+    'View' for create one instance of statistic.
+    """
     serializer_class = SingleStatisticSerializer
 
 
 class StatisticListView(generics.ListCreateAPIView):
+    """
+    Takes two fields date_from and date_to, to
+    return statistic for this date range.
+    Also have filter for ordering on fields.
+    """
     serializer_class = StatisticSerializer
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ('date', 'views', 'clicks', 'cost', 'cpc', 'cpm')
@@ -21,6 +29,9 @@ class StatisticListView(generics.ListCreateAPIView):
         return self.show_stats(request, *args, **kwargs)
 
     def get_queryset(self):
+        """
+        Special queryset for date range.
+        """
         date_from = self.request.data.get('date_from')
         date_to = self.request.data.get('date_to')
         queryset = Statistic.objects.filter(
@@ -29,6 +40,10 @@ class StatisticListView(generics.ListCreateAPIView):
         return queryset
 
     def show_stats(self, request, *args, **kwargs):
+        """
+        Serialization, validation and filtering process.
+        Returns serialized statistic for client.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         queryset = self.filter_queryset(self.get_queryset())
@@ -36,8 +51,8 @@ class StatisticListView(generics.ListCreateAPIView):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(queryset, many=True)
-        
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 

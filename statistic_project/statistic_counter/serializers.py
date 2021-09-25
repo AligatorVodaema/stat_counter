@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from .models import Statistic
 from statistic_project.settings import DATE_INPUT_FORMATS, DATE_FORMAT
-from loguru import logger
 
 
 class SingleStatisticSerializer(serializers.ModelSerializer):
+    """
+    Serializing fields for create an instance Statistic.
+    """
     date = serializers.DateField(
         label='Дата',
         format=DATE_FORMAT,
@@ -12,14 +14,16 @@ class SingleStatisticSerializer(serializers.ModelSerializer):
         )
     class Meta:
         model = Statistic
-        fields = ['date', 'clicks', 'cost', 'views']
+        fields = ('date', 'clicks', 'cost', 'views')
 
     def create(self, validated_data):
-        logger.debug(validated_data)
+        """
+        Supplements the statistics instance with 
+        calculated data based on the transmitted data.
+        """
         clicks = validated_data.get('clicks')
         cost = validated_data.get('cost')
         views = validated_data.get('views')
-        logger.debug(clicks)
 
         if cost and clicks:
             cpc = cost / clicks
@@ -45,6 +49,10 @@ class SingleStatisticSerializer(serializers.ModelSerializer):
 
 
 class StatisticSerializer(serializers.ModelSerializer):
+    """
+    Two fields for input serializing and almost all
+    fields Statistics for output serializing.
+    """
     date_from = serializers.DateField(
         required=True,
         allow_null=False,
