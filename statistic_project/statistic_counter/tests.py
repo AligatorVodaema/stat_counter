@@ -100,7 +100,7 @@ class StatisticTests(APITestCase):
         )
 
     def test_two_instanses_in_view_list(self):
-        second_statistic = Statistic.objects.create(
+        Statistic.objects.create(
             date="1444-11-11",
             views=111,
             clicks=222,
