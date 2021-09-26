@@ -5,6 +5,7 @@ from .models import Statistic
 from rest_framework import status
 from rest_framework.response import Response
 from django.db.models import Q
+from rest_framework.decorators import api_view
 
 
 class StatisticCreateView(generics.CreateAPIView):
@@ -54,8 +55,18 @@ class StatisticListView(generics.ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+        return Response(
+            serializer.data, 
+            status=status.HTTP_200_OK, 
+            headers=headers
+        )
 
 
-class DeleteAllStatisticsView(generics.DestroyAPIView):
-    pass
+@api_view(['DELETE'])
+def delete_all_statistics(_):
+    result = Statistic.objects.all().delete()
+    return Response(
+        {'success': True, 'deleted items': result[0]},
+         status=status.HTTP_204_NO_CONTENT
+    )
+    

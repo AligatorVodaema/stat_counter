@@ -5,16 +5,22 @@ from statistic_project.settings import DATE_INPUT_FORMATS, DATE_FORMAT
 
 class SingleStatisticSerializer(serializers.ModelSerializer):
     """
-    Serializing fields for create an instance Statistic.
+    Serializing fields to create a complete Statistic instance.
     """
     date = serializers.DateField(
         label='Дата',
         format=DATE_FORMAT,
-        input_formats=DATE_INPUT_FORMATS
+        input_formats=DATE_INPUT_FORMATS,
+        required=True
         )
+
     class Meta:
         model = Statistic
-        fields = ('date', 'clicks', 'cost', 'views')
+        fields = ['date', 'views', 'clicks', 'cost', 'cpc', 'cpm']
+        extra_kwargs = {
+            'cpc': {'read_only': True},
+            'cpm': {'read_only': True}
+        }
 
     def create(self, validated_data):
         """
@@ -24,16 +30,14 @@ class SingleStatisticSerializer(serializers.ModelSerializer):
         clicks = validated_data.get('clicks')
         cost = validated_data.get('cost')
         views = validated_data.get('views')
+        cpc = None
+        cpm = None
 
         if cost and clicks:
             cpc = cost / clicks
-        else:
-            cpc = None
 
         if cost and views:
             cpm = cost / views * 1000
-        else:
-            cpm = None
 
         single_statistic = Statistic(
             date=validated_data['date'],
@@ -67,6 +71,7 @@ class StatisticSerializer(serializers.ModelSerializer):
         input_formats=DATE_INPUT_FORMATS,
         write_only=True
     )
+    
     class Meta:
         model = Statistic
         extra_kwargs = {

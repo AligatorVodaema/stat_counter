@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Statistic(models.Model):
     date = models.DateField(verbose_name='Дата события', blank=False)
     views = models.IntegerField(
@@ -36,4 +35,5 @@ class Statistic(models.Model):
         max_digits=8,
         decimal_places=2
         )
-    
+    class Meta:
+        db_table = 'statistic'
