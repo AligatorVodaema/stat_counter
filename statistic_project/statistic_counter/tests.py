@@ -5,7 +5,6 @@ from django.urls import reverse
 from statistic_counter.serializers import SingleStatisticSerializer
 
 
-
 class StatisticTests(APITestCase):
     
     def setUp(self):
