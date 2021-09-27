@@ -11,7 +11,7 @@
 2. $ docker-compose build
 3. $ docker-compose up
 
-### Installation:
+## Installation:
 1. create venv, activate.
 2. `$ cd statistic_project/`
 3. `$ pip install -r requirements.txt`
