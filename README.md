@@ -4,7 +4,7 @@ Service have 3 api methods:
 - viewing statistics by date range.
 - clearing all statistics.
 
-Requirements: Python3.9
+Requirements: Python3.9, Django, DRF.
 
 Installation with docker:
 1. $ cd statistic_project/
@@ -19,7 +19,7 @@ Installation:
 remove postgresql.
 5. $ ./manage.py migrate
 
-Run: $ ./manage.py runserver 0.0.0.0:8000
+Run:<<` $ ./manage.py runserver 0.0.0.0:8000<<`
 
 Tests:
 For docker: $ docker exec -it stat_app python ./manage.py test
@@ -28,13 +28,13 @@ For local: $ ./manage.py test
 Usage:
 For create statistic:
 POST /api/v1/create/
-{
+<<`{
     "date": "1234-3-11",
     "views": 333,
     "clicks": 22,
     "cost": "11.99"
-}
-"date" is required other optional
+}<<`
+Fields: "date" is required other optional.
 Filtering:
 ...
 
